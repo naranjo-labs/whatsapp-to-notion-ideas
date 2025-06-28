@@ -1,0 +1,193 @@
+{
+  "name": "Notion ideas",
+  "nodes": [
+    {
+      "parameters": {
+        "pageId": {
+          "__rl": true,
+          "value": "https://www.notion.so/Ideas-20ff18fc4f8c807b9743d4f33a3e0659",
+          "mode": "url",
+          "__regex": "(?:https|http)://www\\.notion\\.so/(?:[a-z0-9-]{2,}/)?(?:[a-zA-Z0-9-]{1,}-)?([0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12})"
+        },
+        "title": "=Potential idea {{ $now.format('dd/LL/yyyy') }}",
+        "simple": false,
+        "blockUi": {
+          "blockValues": [
+            {
+              "type": "bulleted_list_item",
+              "textContent": "={{$json.text}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        900,
+        220
+      ],
+      "id": "1438196a-0eec-4517-81ab-5b11cf88bb2e",
+      "name": "Notion",
+      "credentials": {
+        "notionApi": {
+          "id": "oPBrV7b54UZoaoyS",
+          "name": "Notion C VTEX"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        20,
+        220
+      ],
+      "id": "de246fec-2468-4219-9ad4-ed729df6b689",
+      "name": "WhatsApp Trigger",
+      "webhookId": "689d699f-952c-412e-9008-04c0f917dd27",
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "UtfeDmhGyo1STYv0",
+          "name": "WhatsApp OAuth WA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "media",
+        "operation": "mediaUrlGet",
+        "mediaGetId": "={{ $json.messages[0].audio.id }}"
+      },
+      "id": "47612642-5459-4bcf-8631-7b206ed1a898",
+      "name": "Get Audio URL",
+      "type": "n8n-nodes-base.whatsApp",
+      "position": [
+        220,
+        220
+      ],
+      "typeVersion": 1,
+      "webhookId": "95f71ab6-a2f4-4b71-9df8-4dc32f781758",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "2mgpSJ2E9MPXYFoq",
+          "name": "WhatsApp TW"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "whatsAppApi",
+        "options": {}
+      },
+      "id": "edaa747b-dcba-42b7-a63a-d413313383a7",
+      "name": "Download Audio",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        440,
+        220
+      ],
+      "typeVersion": 4.2,
+      "credentials": {
+        "whatsAppApi": {
+          "id": "2mgpSJ2E9MPXYFoq",
+          "name": "WhatsApp TW"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        680,
+        220
+      ],
+      "id": "627fe86d-8dfe-422b-a8ec-4217b393c03a",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "ICGx6WzYYeMOAXYM",
+          "name": "OpenAi EV"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "WhatsApp Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Audio URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Audio URL": {
+      "main": [
+        [
+          {
+            "node": "Download Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Audio": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Notion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "826d4830-5886-4fa6-8bba-8c96236c8ba9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4e0ebc2fa602d03fc17792c504e87069c735c82f9fd15b961ba384549251473b"
+  },
+  "id": "NThTfDd9nDNp2jFG",
+  "tags": [
+    {
+      "createdAt": "2025-06-11T01:19:12.649Z",
+      "updatedAt": "2025-06-11T01:19:12.649Z",
+      "id": "iYoAysVrAXJGmJ7i",
+      "name": "cro"
+    }
+  ]
+}
